@@ -1,13 +1,8 @@
 package main
 
 // divide and conquer
-import (
-	"fmt"
-	"math/rand"
-	"time"
-)
 
-func quickSort(arr []int) []int {
+func QuickSort(arr []int) []int {
 	if len(arr) <= 1 {
 		return arr
 	}
@@ -24,27 +19,11 @@ func quickSort(arr []int) []int {
 			rightArr = append(rightArr, i)
 		}
 	}
-	leftArr = quickSort(leftArr)
-	rightArr = quickSort(rightArr)
+	leftArr = QuickSort(leftArr)
+	rightArr = QuickSort(rightArr)
 
 	leftArr = append(leftArr, midArr...)
 	leftArr = append(leftArr, rightArr...)
 
 	return leftArr
-}
-
-func RandArray(n int) []int {
-	rand.Seed(time.Now().UnixNano())
-	arr := make([]int, n)
-	for i := 0; i <= n-1; i++ {
-		arr[i] = rand.Intn(n)
-	}
-	return arr
-}
-
-func main() {
-	arr := RandArray(10)
-	fmt.Println("Initial array is:", arr)
-	fmt.Println()
-	fmt.Println("Sorted array is:", quickSort(arr))
 }

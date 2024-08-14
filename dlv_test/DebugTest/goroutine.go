@@ -3,32 +3,34 @@ package main
 import (
 	"fmt"
 	"sync"
-	"time"
+	// "time"
 )
 
-func worker(id int, wg *sync.WaitGroup, results chan<- int) {
-	defer wg.Done()
-	fmt.Printf("Worker %d starting\n", id)
-
-	time.Sleep(time.Second)
-
-	fmt.Printf("Worker %d done\n", id)
-	results <- id
-}
+var gcount int
 
 func main() {
 	var wg sync.WaitGroup
-	results := make(chan int, 5)
+	counter := 0
+	goroutines := 100
 
-	for i := 1; i <= 5; i++ {
-		wg.Add(1)
-		go worker(i, &wg, results)
+	wg.Add(goroutines)
+
+	for i := 0; i < goroutines; i++ {
+		go func(id int) {
+			defer wg.Done()
+			for j := 0; j < 1000; j++ {
+				counter++
+				fmt.Printf("%d ", i)
+				gcount++
+				// time.Sleep(time.Millisecond)
+			}
+			//fmt.Printf("Goroutine %d finished\n", id)
+		}(i)
 	}
 
 	wg.Wait()
-	close(results)
 
-	for result := range results {
-		fmt.Printf("Result from worker %d\n", result)
-	}
+	fmt.Println("All goroutines finished")
+	fmt.Println("Final counter value:", counter)
+	fmt.Println("Final global counter value:", gcount)
 }
